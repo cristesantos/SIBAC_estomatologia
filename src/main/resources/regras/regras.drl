@@ -1,0 +1,53 @@
+package regras
+
+import com.exemplo.estomatologia.model.Sintomas;
+import com.exemplo.estomatologia.model.Diagnostico;
+
+rule "Gengiva Saudável"
+when
+    $s : Sintomas(dor == "pouca", vermelho == "pouco", tartaro == false, lesoes == false)
+then
+    insert(new Diagnostico("Gengiva saudável", 0.8));
+end
+
+rule "Gengivite Leve"
+when
+    $s : Sintomas(dor == "pouca", vermelho == "pouco", tartaro == false)
+then
+    insert(new Diagnostico("Gengivite leve", 0.6));
+end
+
+rule "Gengivite Moderada"
+when
+    $s : Sintomas(dor == "média", vermelho == "médio", tartaro == true)
+then
+    insert(new Diagnostico("Gengivite moderada", 0.7));
+end
+
+rule "Gengivite Grave"
+when
+    $s : Sintomas(dor == "muita", vermelho == "muito", lesoes == true)
+then
+    insert(new Diagnostico("Gengivite grave", 0.85));
+end
+
+rule "Periodontite Inicial"
+when
+    $s : Sintomas(dor == "média", vermelho == "muito", tartaro == true)
+then
+    insert(new Diagnostico("Periodontite inicial", 0.75));
+end
+
+rule "Periodontite Avançada (abscesso)"
+when
+    $s : Sintomas(abscesso == true)
+then
+    insert(new Diagnostico("Periodontite avançada", 0.9));
+end
+
+rule "Periodontite Avançada (dor e vermelho)"
+when
+    $s : Sintomas(dor == "muita", vermelho == "muito")
+then
+    insert(new Diagnostico("Periodontite avançada", 0.85));
+end
