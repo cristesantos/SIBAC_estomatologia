@@ -1,3 +1,5 @@
+package estomatologia;
+
 import org.kie.api.KieServices;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
@@ -85,7 +87,7 @@ public class DiagnosticoUI extends JFrame {
                     .collect(Collectors.toList());
 
             if (resultados.isEmpty()) {
-                resultadoArea.setText("Nenhum diagnóstico encontrado.");
+                resultadoArea.setText("Encaminhar paciente para especialista.");
             } else {
                 for (Object d : resultados) {
                     resultadoArea.append(d.toString() + "\n");

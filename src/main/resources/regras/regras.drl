@@ -1,3 +1,6 @@
+
+
+
 package regras
 
 import com.exemplo.estomatologia.model.Sintomas;
@@ -7,47 +10,96 @@ rule "Gengiva Saudável"
 when
     $s : Sintomas(dor == "pouca", vermelho == "pouco", tartaro == false, lesoes == false)
 then
-    insert(new Diagnostico("Gengiva saudável", 0.8));
+    double[] valores = new double[] {
+        $s.getFCDor(),
+        $s.getFCVermelho(),
+        $s.getFCTartaro(),
+        $s.getFCLesoes()
+    };
+    double fc = combinarFCs(valores);
+    insert(new Diagnostico("Gengiva saudável", fc));
 end
 
 rule "Gengivite Leve"
 when
     $s : Sintomas(dor == "pouca", vermelho == "pouco", tartaro == false)
 then
-    insert(new Diagnostico("Gengivite leve", 0.6));
+    double[] valores = new double[] {
+        $s.getFCDor(),
+        $s.getFCVermelho()
+    };
+    double fc = combinarFCs(valores);
+    insert(new Diagnostico("Gengivite leve", fc));
 end
 
 rule "Gengivite Moderada"
 when
     $s : Sintomas(dor == "média", vermelho == "médio", tartaro == true)
 then
-    insert(new Diagnostico("Gengivite moderada", 0.7));
+    double[] valores = new double[] {
+        $s.getFCDor(),
+        $s.getFCVermelho(),
+        $s.getFCTartaro()
+    };
+    double fc = combinarFCs(valores);
+    insert(new Diagnostico("Gengivite moderada", fc));
 end
 
 rule "Gengivite Grave"
 when
     $s : Sintomas(dor == "muita", vermelho == "muito", lesoes == true)
 then
-    insert(new Diagnostico("Gengivite grave", 0.85));
+    double[] valores = new double[] {
+        $s.getFCDor(),
+        $s.getFCVermelho(),
+        $s.getFCLesoes()
+    };
+    double fc = combinarFCs(valores);
+    insert(new Diagnostico("Gengivite grave", fc));
 end
 
 rule "Periodontite Inicial"
 when
     $s : Sintomas(dor == "média", vermelho == "muito", tartaro == true)
 then
-    insert(new Diagnostico("Periodontite inicial", 0.75));
+    double[] valores = new double[] {
+        $s.getFCDor(),
+        $s.getFCVermelho(),
+        $s.getFCTartaro()
+    };
+    double fc = combinarFCs(valores);
+    insert(new Diagnostico("Periodontite inicial", fc));
 end
 
 rule "Periodontite Avançada (abscesso)"
 when
     $s : Sintomas(abscesso == true)
 then
-    insert(new Diagnostico("Periodontite avançada", 0.9));
+    double[] valores = new double[] {
+        $s.getFCAbscesso()
+    };
+    double fc = combinarFCs(valores);
+    insert(new Diagnostico("Periodontite avançada", fc));
 end
 
 rule "Periodontite Avançada (dor e vermelho)"
 when
     $s : Sintomas(dor == "muita", vermelho == "muito")
 then
-    insert(new Diagnostico("Periodontite avançada", 0.85));
+    double[] valores = new double[] {
+        $s.getFCDor(),
+        $s.getFCVermelho()
+    };
+    double fc = combinarFCs(valores);
+    insert(new Diagnostico("Periodontite avançada", fc));
 end
+
+// Função para combinar fatores de certeza
+function double combinarFCs(double[] valores) {
+    if (valores.length == 0) return 0.0;
+    double resultado = valores[0];
+    for (int i = 1; i < valores.length; i++) {
+        resultado = resultado + valores[i] * (1 - resultado);
+    }
+    return resultado;
+}
