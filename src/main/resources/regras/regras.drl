@@ -1,100 +1,9 @@
-
-
-
 package regras
 
 import com.exemplo.estomatologia.model.Sintomas;
 import com.exemplo.estomatologia.model.Diagnostico;
 
-rule "Gengiva Saudável"
-when
-    $s : Sintomas(dor == "pouca", vermelho == "pouco", tartaro == false, lesoes == false)
-then
-    double[] valores = new double[] {
-        $s.getFCDor(),
-        $s.getFCVermelho(),
-        $s.getFCTartaro(),
-        $s.getFCLesoes()
-    };
-    double fc = combinarFCs(valores);
-    insert(new Diagnostico("Gengiva saudável", fc));
-end
-
-rule "Gengivite Leve"
-when
-    $s : Sintomas(dor == "pouca", vermelho == "pouco", tartaro == false)
-then
-    double[] valores = new double[] {
-        $s.getFCDor(),
-        $s.getFCVermelho()
-    };
-    double fc = combinarFCs(valores);
-    insert(new Diagnostico("Gengivite leve", fc));
-end
-
-rule "Gengivite Moderada"
-when
-    $s : Sintomas(dor == "média", vermelho == "médio", tartaro == true)
-then
-    double[] valores = new double[] {
-        $s.getFCDor(),
-        $s.getFCVermelho(),
-        $s.getFCTartaro()
-    };
-    double fc = combinarFCs(valores);
-    insert(new Diagnostico("Gengivite moderada", fc));
-end
-
-rule "Gengivite Grave"
-when
-    $s : Sintomas(dor == "muita", vermelho == "muito", lesoes == true)
-then
-    double[] valores = new double[] {
-        $s.getFCDor(),
-        $s.getFCVermelho(),
-        $s.getFCLesoes()
-    };
-    double fc = combinarFCs(valores);
-    insert(new Diagnostico("Gengivite grave", fc));
-end
-
-rule "Periodontite Inicial"
-when
-    $s : Sintomas(dor == "média", vermelho == "muito", tartaro == true)
-then
-    double[] valores = new double[] {
-        $s.getFCDor(),
-        $s.getFCVermelho(),
-        $s.getFCTartaro()
-    };
-    double fc = combinarFCs(valores);
-    insert(new Diagnostico("Periodontite inicial", fc));
-end
-
-rule "Periodontite Avançada (abscesso)"
-when
-    $s : Sintomas(abscesso == true)
-then
-    double[] valores = new double[] {
-        $s.getFCAbscesso()
-    };
-    double fc = combinarFCs(valores);
-    insert(new Diagnostico("Periodontite avançada", fc));
-end
-
-rule "Periodontite Avançada (dor e vermelho)"
-when
-    $s : Sintomas(dor == "muita", vermelho == "muito")
-then
-    double[] valores = new double[] {
-        $s.getFCDor(),
-        $s.getFCVermelho()
-    };
-    double fc = combinarFCs(valores);
-    insert(new Diagnostico("Periodontite avançada", fc));
-end
-
-// Função para combinar fatores de certeza
+// Função de combinação de fatores de certeza (FC) incremental
 function double combinarFCs(double[] valores) {
     if (valores.length == 0) return 0.0;
     double resultado = valores[0];
@@ -103,3 +12,140 @@ function double combinarFCs(double[] valores) {
     }
     return resultado;
 }
+
+// Diagnóstico: Gengiva Saudável
+rule "Gengiva Saudável"
+when
+    $s : Sintomas(
+        dor == "leve",
+        sangramento == false,
+        fistula == false,
+        aumentoBolsa == false,
+        profundidadeBolsa < 3,
+        mobilidadeDental == 0
+    )
+then
+    double[] valores = new double[] {
+        $s.getFCDor()
+    };
+    double fc = combinarFCs(valores);
+    insert(new Diagnostico("Gengiva saudável", fc));
+end
+
+// Diagnóstico: Gengivite
+rule "Gengivite"
+when
+    $s : Sintomas(
+        sangramento == true,
+        dor == "leve" || dor == "moderada",
+        aumentoBolsa == true,
+        profundidadeBolsa >= 3 && profundidadeBolsa <= 4,
+        mobilidadeDental <= 1
+    )
+then
+    double[] valores = new double[] {
+        $s.getFCSangramento(),
+        $s.getFCDor()
+    };
+    double fc = combinarFCs(valores);
+    insert(new Diagnostico("Gengivite", fc));
+end
+
+// Diagnóstico: Doença Periodontal Estágio 1
+rule "Doença Periodontal Estágio 1"
+when
+    $s : Sintomas(
+        profundidadeBolsa >= 4 && profundidadeBolsa <= 5,
+        mobilidadeDental <= 1
+    )
+then
+    double[] valores = new double[] {
+        $s.getFCProfundidadeBolsa()
+    };
+    double fc = combinarFCs(valores);
+    insert(new Diagnostico("Doença Periodontal Estágio 1", fc));
+end
+
+// Diagnóstico: Doença Periodontal Estágio 2
+rule "Doença Periodontal Estágio 2"
+when
+    $s : Sintomas(
+        profundidadeBolsa >= 5 && profundidadeBolsa <= 6,
+        mobilidadeDental <= 2
+    )
+then
+    double[] valores = new double[] {
+        $s.getFCProfundidadeBolsa(),
+        $s.getFCMobilidadeDental()
+    };
+    double fc = combinarFCs(valores);
+    insert(new Diagnostico("Doença Periodontal Estágio 2", fc));
+end
+
+// Diagnóstico: Doença Periodontal Estágio 3
+rule "Doença Periodontal Estágio 3"
+when
+    $s : Sintomas(
+        profundidadeBolsa >= 6 && profundidadeBolsa <= 7,
+        mobilidadeDental >= 2
+    )
+then
+    double[] valores = new double[] {
+        $s.getFCProfundidadeBolsa(),
+        $s.getFCMobilidadeDental()
+    };
+    double fc = combinarFCs(valores);
+    insert(new Diagnostico("Doença Periodontal Estágio 3", fc));
+end
+
+// Diagnóstico: Doença Periodontal Estágio 4
+rule "Doença Periodontal Estágio 4"
+when
+    $s : Sintomas(
+        profundidadeBolsa > 7,
+        mobilidadeDental == 3
+    )
+then
+    double[] valores = new double[] {
+        $s.getFCProfundidadeBolsa(),
+        $s.getFCMobilidadeDental()
+    };
+    double fc = combinarFCs(valores);
+    insert(new Diagnostico("Doença Periodontal Estágio 4", fc));
+end
+
+// Diagnóstico: Abscesso Pulpar
+rule "Abscesso Pulpar"
+when
+    $s : Sintomas(
+        dor == "extrema",
+        fistula == true
+    )
+then
+    double[] valores = new double[] {
+        $s.getFCDor(),
+        $s.getFCFistula()
+    };
+    double fc = combinarFCs(valores);
+    insert(new Diagnostico("Abscesso Pulpar", fc));
+end
+
+// Diagnóstico: Abscesso Periodontal
+rule "Abscesso Periodontal"
+when
+    $s : Sintomas(
+        dor == "alta" || dor == "extrema",
+        fistula == true,
+        aumentoBolsa == true,
+        profundidadeBolsa >= 5
+    )
+then
+    double[] valores = new double[] {
+        $s.getFCDor(),
+        $s.getFCFistula(),
+        $s.getFCAumentoBolsa(),
+        $s.getFCProfundidadeBolsa()
+    };
+    double fc = combinarFCs(valores);
+    insert(new Diagnostico("Abscesso Periodontal", fc));
+end

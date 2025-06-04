@@ -17,8 +17,8 @@ public class Main {
             KieSession kSession = kc.newKieSession("ksession-rules");
 
             Sintomas sintomas = new Sintomas();
-            sintomas.setDor("muita");
-            sintomas.setVermelho("muito");
+            sintomas.setDor("leve");
+            sintomas.setAparenciaGengiva("lisa e brilahnte");
             sintomas.setLesoes(true);
             sintomas.setTartaro(true);
             sintomas.setAbscesso(false);
