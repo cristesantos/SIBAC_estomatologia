@@ -1,18 +1,29 @@
 package com.exemplo.estomatologia.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Hipotese {
-    private String nome;
-    private double fc;
+    private final String nome;
+    private final List<Double> fatores;
 
     public Hipotese(String nome) {
         this.nome = nome;
-        this.fc = 0.0;
+        this.fatores = new ArrayList<>();
+    }
+
+    public void atualizarFC(double fc) {
+        fatores.add(fc);
     }
 
     public String getNome() { return nome; }
-    public double getFc() { return fc; }
 
-    public void atualizarFC(double novoFC) {
-        this.fc = this.fc + novoFC * (1 - this.fc);
+    public double getFCCombinado() {
+        if (fatores.isEmpty()) return 0.0;
+        double resultado = fatores.get(0);
+        for (int i = 1; i < fatores.size(); i++) {
+            resultado = resultado + fatores.get(i) * (1 - resultado);
+        }
+        return resultado;
     }
 }

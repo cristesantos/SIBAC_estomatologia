@@ -104,7 +104,7 @@ public class DiagnosticoUI extends JFrame {
             sintomas.setMobilidadeDental((Integer) mobilidadeField.getSelectedItem());
 
             // Inserir fatos e disparar regras
-            //kSession.insert(sintomas);
+            /*kSession.insert(sintomas);
 
             if (sintomas.getDor() != null) {
                 double fc = sintomas.getDor().equals("alta") ? 0.9 : sintomas.getDor().equals("moderada") ? 0.7 : 0.3;
@@ -112,7 +112,16 @@ public class DiagnosticoUI extends JFrame {
             }
             if (sintomas.isSangramento()) {
                 kSession.insert(new Evidencia("sangramento", "true", 0.8));
-            }
+            }*/
+
+            kSession.insert(sintomas);
+
+            kSession.insert(new Evidencia("dor", sintomas.getDor(), 0.0));
+            if (sintomas.isSangramento())
+                kSession.insert(new Evidencia("sangramento", true, 0.0));
+            if (sintomas.getProfundidadeBolsa() > 5)
+                kSession.insert(new Evidencia("profundidade_bolsa", "alta", 0.0));
+
 
             kSession.fireAllRules();
 

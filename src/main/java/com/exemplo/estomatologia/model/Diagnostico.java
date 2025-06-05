@@ -1,24 +1,19 @@
 package com.exemplo.estomatologia.model;
 
 public class Diagnostico {
-    private String nome;
-    private double fatorCerteza;
+    private final String nome;
+    private final double fc;
 
-    public Diagnostico(String nome, double fatorCerteza) {
+    public Diagnostico(String nome, double fc) {
         this.nome = nome;
-        this.fatorCerteza = fatorCerteza;
+        this.fc = fc;
     }
 
-    public String getNome() {
-        return nome;
-    }
-
-    public double getFatorCerteza() {
-        return fatorCerteza;
-    }
+    public String getNome() { return nome; }
+    public double getFc() { return fc; }
 
     @Override
     public String toString() {
-        return nome + " (FC: " + fatorCerteza + ")";
+        return "Diagnóstico: " + nome + " (FC: " + String.format("%.2f", fc) + ")";
     }
 }

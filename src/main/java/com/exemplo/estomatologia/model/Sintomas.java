@@ -6,63 +6,13 @@ public class Sintomas {
     private boolean lesoes;
     private boolean tartaro;
     private boolean abscesso;
-
     private boolean fistula;
     private boolean sangramento;
     private boolean aumentoBolsa;
     private int profundidadeBolsa;
-    private int mobilidadeDental; // 0 a 3
+    private int mobilidadeDental;
 
-    // ===== Fatores de Certeza Padrão =====
-    public double getFCDor() {
-        switch (dor) {
-            case "leve": return 0.2;
-            case "média": return 0.4;
-            case "moderada": return 0.6;
-            case "alta": return 0.8;
-            case "extrema": return 0.9;
-            default: return 0.01;
-        }
-    }
-
-    public double getFCAparenciaGengiva() {
-        switch (aparenciaGengiva) {
-            case "lisa e brilhante": return 0.2;
-            case "edemaciada": return 0.6;
-            default: return 0.01;
-        }
-    }
-
-    public double getFCLesoes() { return lesoes ? 0.8 : 0.2; }
-
-    public double getFCTartaro() { return tartaro ? 0.7 : 0.2; }
-
-    public double getFCAbscesso() { return abscesso ? 0.9 : 0.2; }
-
-    public double getFCFistula() { return fistula ? 0.9 : 0.2; }
-
-    public double getFCSangramento() { return sangramento ? 0.6 : 0.2; }
-
-    public double getFCAumentoBolsa() { return aumentoBolsa ? 0.6 : 0.2; }
-
-    public double getFCProfundidadeBolsa() {
-        if (profundidadeBolsa >= 7) return 0.9;
-        else if (profundidadeBolsa >= 5) return 0.8;
-        else if (profundidadeBolsa >= 3) return 0.5;
-        else return 0.1;
-    }
-
-    public double getFCMobilidadeDental() {
-        switch (mobilidadeDental) {
-            case 3: return 0.9;
-            case 2: return 0.8;
-            case 1: return 0.5;
-            case 0: return 0.2;
-            default: return 0.1;
-        }
-    }
-
-    // ===== Getters e Setters =====
+    // Apenas getters e setters — nada de lógica de fator de certeza aqui
     public String getDor() { return dor; }
     public void setDor(String dor) { this.dor = dor; }
 

@@ -1,17 +1,17 @@
 package com.exemplo.estomatologia.model;
 
 public class Evidencia {
-    private String tipo;
-    private String valor;
-    private double fatorCerteza;
+    private final String tipo;
+    private final Object valor;
+    private final double fc;
 
-    public Evidencia(String tipo, String valor, double fatorCerteza) {
+    public Evidencia(String tipo, Object valor, double fc) {
         this.tipo = tipo;
         this.valor = valor;
-        this.fatorCerteza = fatorCerteza;
+        this.fc = fc;
     }
 
     public String getTipo() { return tipo; }
-    public String getValor() { return valor; }
-    public double getFatorCerteza() { return fatorCerteza; }
+    public Object getValor() { return valor; }
+    public double getFc() { return fc; }
 }

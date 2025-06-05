@@ -3,36 +3,34 @@ package regras
 import com.exemplo.estomatologia.model.Hipotese;
 import com.exemplo.estomatologia.model.Evidencia;
 import com.exemplo.estomatologia.model.Diagnostico;
+import com.exemplo.estomatologia.model.Sintomas;
 
-rule "Inicializar Hipotese Periodontite Estágio 3"
+rule "Criar hipótese - Abscesso Pulpar"
 when
-    not Hipotese(nome == "Doença Periodontal Estágio 3")
+    $s : Sintomas()
 then
-    insert(new Hipotese("Doença Periodontal Estágio 3"));
+    insert(new Hipotese("Abscesso Pulpar"));
 end
 
-rule "Dor moderada ou alta indica Periodontite Estágio 3"
+rule "Abscesso Pulpar - dor alta"
 when
-    $h : Hipotese(nome == "Doença Periodontal Estágio 3")
-    Evidencia(tipo == "dor", (valor == "moderada" || valor == "alta"), $fc : 0.9)
+    $h : Hipotese(nome == "Abscesso Pulpar")
+    Evidencia(tipo == "dor", valor == "alta")
 then
-    $h.atualizarFC($fc);
+    $h.atualizarFC(0.7);
 end
 
-rule "Sangramento indica Periodontite Estágio 3"
+rule "Abscesso Pulpar - sangramento"
 when
-    $h : Hipotese(nome == "Doença Periodontal Estágio 3")
-    Evidencia(tipo == "sangramento", valor == "true", $fc : 0.7)
+    $h : Hipotese(nome == "Abscesso Pulpar")
+    Evidencia(tipo == "sangramento", valor == true)
 then
-    $h.atualizarFC($fc);
+    $h.atualizarFC(0.5);
 end
 
-// Regras similares para profundidadeBolsa, mobilidade, aumentoBolsa, fístula...
-
-rule "Gerar diagnóstico final para Periodontite Estágio 3"
+rule "Gerar Diagnóstico - Abscesso Pulpar"
 when
-    $h : Hipotese(nome == "Doença Periodontal Estágio 3", $fc : fc)
-    eval($fc > 0.3)
+    $h : Hipotese(nome == "Abscesso Pulpar")
 then
-    insert(new Diagnostico("Doença Periodontal Estágio 3", $fc));
+    insert(new Diagnostico($h.getNome(), $h.getFCCombinado()));
 end
