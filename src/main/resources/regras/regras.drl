@@ -5,6 +5,7 @@ import com.exemplo.estomatologia.model.Evidencia;
 import com.exemplo.estomatologia.model.Diagnostico;
 import com.exemplo.estomatologia.model.Sintomas;
 
+// Hipóteses
 rule "Criar hipótese - Abscesso Pulpar"
 when
     $s : Sintomas()
@@ -12,25 +13,189 @@ then
     insert(new Hipotese("Abscesso Pulpar"));
 end
 
-rule "Abscesso Pulpar - dor alta"
+rule "Criar hipótese - Abscesso Periodontal"
+when
+    $s : Sintomas()
+then
+    insert(new Hipotese("Abscesso Periodontal"));
+end
+
+rule "Criar hipótese - Doença Periodontal Estágio 1"
+when
+    $s : Sintomas()
+then
+    insert(new Hipotese("Doença Periodontal Estágio 1"));
+end
+
+rule "Criar hipótese - Doença Periodontal Estágio 2"
+when
+    $s : Sintomas()
+then
+    insert(new Hipotese("Doença Periodontal Estágio 2"));
+end
+
+rule "Criar hipótese - Doença Periodontal Estágio 3"
+when
+    $s : Sintomas()
+then
+    insert(new Hipotese("Doença Periodontal Estágio 3"));
+end
+
+rule "Criar hipótese - Doença Periodontal Estágio 4"
+when
+    $s : Sintomas()
+then
+    insert(new Hipotese("Doença Periodontal Estágio 4"));
+end
+
+rule "Criar hipótese - Gengivite"
+when
+    $s : Sintomas()
+then
+    insert(new Hipotese("Gengivite"));
+end
+
+rule "Criar hipótese - Gengiva Saudável"
+when
+    $s : Sintomas()
+then
+    insert(new Hipotese("Gengiva Saudável"));
+end
+
+// Regras de evidências associadas a hipóteses
+rule "Abscesso Pulpar - dor extrema"
 when
     $h : Hipotese(nome == "Abscesso Pulpar")
+    Evidencia(tipo == "dor", valor == "extrema")
+then
+    $h.atualizarFC(1.0);
+end
+
+rule "Abscesso Pulpar - presença de fístula"
+when
+    $h : Hipotese(nome == "Abscesso Pulpar")
+    Evidencia(tipo == "fistula", valor == true)
+then
+    $h.atualizarFC(0.9);
+end
+
+rule "Abscesso Pulpar - mobilidade alta"
+when
+    $h : Hipotese(nome == "Abscesso Pulpar")
+    Evidencia(tipo == "mobilidade", valor >= 2)
+then
+    $h.atualizarFC(0.6);
+end
+
+rule "Abscesso Periodontal - dor alta"
+when
+    $h : Hipotese(nome == "Abscesso Periodontal")
     Evidencia(tipo == "dor", valor == "alta")
+then
+    $h.atualizarFC(0.8);
+end
+
+rule "Abscesso Periodontal - presença de fístula"
+when
+    $h : Hipotese(nome == "Abscesso Periodontal")
+    Evidencia(tipo == "fistula", valor == true)
 then
     $h.atualizarFC(0.7);
 end
 
-rule "Abscesso Pulpar - sangramento"
+rule "Abscesso Periodontal - mobilidade"
 when
-    $h : Hipotese(nome == "Abscesso Pulpar")
-    Evidencia(tipo == "sangramento", valor == true)
+    $h : Hipotese(nome == "Abscesso Periodontal")
+    Evidencia(tipo == "mobilidade", valor >= 1)
+then
+    $h.atualizarFC(0.6);
+end
+
+rule "Doença Periodontal Estágio 1 - dor leve"
+when
+    $h : Hipotese(nome == "Doença Periodontal Estágio 1")
+    Evidencia(tipo == "dor", valor == "leve")
+then
+    $h.atualizarFC(0.3);
+end
+
+rule "Doença Periodontal Estágio 1 - profundidade 3"
+when
+    $h : Hipotese(nome == "Doença Periodontal Estágio 1")
+    Evidencia(tipo == "profundidade_bolsa", valor == 3)
 then
     $h.atualizarFC(0.5);
 end
 
-rule "Gerar Diagnóstico - Abscesso Pulpar"
+rule "Doença Periodontal Estágio 2 - dor moderada"
 when
-    $h : Hipotese(nome == "Abscesso Pulpar")
+    $h : Hipotese(nome == "Doença Periodontal Estágio 2")
+    Evidencia(tipo == "dor", valor == "moderada")
+then
+    $h.atualizarFC(0.6);
+end
+
+rule "Doença Periodontal Estágio 2 - profundidade 4"
+when
+    $h : Hipotese(nome == "Doença Periodontal Estágio 2")
+    Evidencia(tipo == "profundidade_bolsa", valor == 4)
+then
+    $h.atualizarFC(0.6);
+end
+
+rule "Doença Periodontal Estágio 3 - profundidade > 5"
+when
+    $h : Hipotese(nome == "Doença Periodontal Estágio 3")
+    Evidencia(tipo == "profundidade_bolsa", valor > 5)
+then
+    $h.atualizarFC(0.8);
+end
+
+rule "Doença Periodontal Estágio 3 - mobilidade >= 2"
+when
+    $h : Hipotese(nome == "Doença Periodontal Estágio 3")
+    Evidencia(tipo == "mobilidade", valor >= 2)
+then
+    $h.atualizarFC(0.7);
+end
+
+rule "Doença Periodontal Estágio 4 - mobilidade 3"
+when
+    $h : Hipotese(nome == "Doença Periodontal Estágio 4")
+    Evidencia(tipo == "mobilidade", valor == 3)
+then
+    $h.atualizarFC(0.9);
+end
+
+rule "Gengivite - dor moderada"
+when
+    $h : Hipotese(nome == "Gengivite")
+    Evidencia(tipo == "dor", valor == "moderada")
+then
+    $h.atualizarFC(0.5);
+end
+
+rule "Gengivite - sangramento"
+when
+    $h : Hipotese(nome == "Gengivite")
+    Evidencia(tipo == "sangramento", valor == true)
+then
+    $h.atualizarFC(0.7);
+end
+
+rule "Gengiva Saudável - sem sintomas"
+when
+    $h : Hipotese(nome == "Gengiva Saudável")
+    not(Evidencia())
+then
+    $h.atualizarFC(1.0);
+end
+
+// Geração de Diagnóstico
+rule "Gerar Diagnóstico se FC > 0.5"
+when
+    $h : Hipotese()
+    eval($h.getFCCombinado() > 0.5)
 then
     insert(new Diagnostico($h.getNome(), $h.getFCCombinado()));
 end

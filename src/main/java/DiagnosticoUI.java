@@ -120,8 +120,25 @@ public class DiagnosticoUI extends JFrame {
             if (sintomas.isSangramento())
                 kSession.insert(new Evidencia("sangramento", true, 0.0));
             if (sintomas.getProfundidadeBolsa() > 5)
-                kSession.insert(new Evidencia("profundidade_bolsa", "alta", 0.0));
-
+                kSession.insert(new Evidencia("profundidadeBolsa", "alta", 0.0));
+            if (sintomas.getMobilidadeDental() > 1)
+                kSession.insert(new Evidencia("mobilidadeDental", "alta", 0.0));
+            if (sintomas.isFistula()) {
+                kSession.insert(new Evidencia("fistula", true, 0.0));
+            }
+            if (sintomas.isTartaro()) {
+                kSession.insert(new Evidencia("tartaro", true, 0.0));
+            }
+            kSession.insert(new Evidencia("aparenciaGengiva", sintomas.getAparenciaGengiva(), 0.0));
+            if (sintomas.isLesoes()) {
+                kSession.insert(new Evidencia("lesoes", true, 0.0));
+            }
+            if (sintomas.isAbscesso()) {
+                kSession.insert(new Evidencia("abscesso", true, 0.0));
+            }
+            if (sintomas.isAumentoBolsa()) {
+                kSession.insert(new Evidencia("aumentoBolsa", true, 0.0));
+            }
 
             kSession.fireAllRules();
 
