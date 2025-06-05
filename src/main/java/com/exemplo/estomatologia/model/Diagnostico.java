@@ -9,6 +9,14 @@ public class Diagnostico {
         this.fatorCerteza = fatorCerteza;
     }
 
+    public String getNome() {
+        return nome;
+    }
+
+    public double getFatorCerteza() {
+        return fatorCerteza;
+    }
+
     @Override
     public String toString() {
         return nome + " (FC: " + fatorCerteza + ")";

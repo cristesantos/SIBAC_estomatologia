@@ -1,151 +1,38 @@
 package regras
 
-import com.exemplo.estomatologia.model.Sintomas;
+import com.exemplo.estomatologia.model.Hipotese;
+import com.exemplo.estomatologia.model.Evidencia;
 import com.exemplo.estomatologia.model.Diagnostico;
 
-// Função de combinação de fatores de certeza (FC) incremental
-function double combinarFCs(double[] valores) {
-    if (valores.length == 0) return 0.0;
-    double resultado = valores[0];
-    for (int i = 1; i < valores.length; i++) {
-        resultado = resultado + valores[i] * (1 - resultado);
-    }
-    return resultado;
-}
-
-// Diagnóstico: Gengiva Saudável
-rule "Gengiva Saudável"
+rule "Inicializar Hipotese Periodontite Estágio 3"
 when
-    $s : Sintomas(
-        dor == "leve",
-        sangramento == false,
-        fistula == false,
-        aumentoBolsa == false,
-        profundidadeBolsa < 3,
-        mobilidadeDental == 0
-    )
+    not Hipotese(nome == "Doença Periodontal Estágio 3")
 then
-    double[] valores = new double[] {
-        $s.getFCDor()
-    };
-    double fc = combinarFCs(valores);
-    insert(new Diagnostico("Gengiva saudável", fc));
+    insert(new Hipotese("Doença Periodontal Estágio 3"));
 end
 
-// Diagnóstico: Gengivite
-rule "Gengivite"
+rule "Dor moderada ou alta indica Periodontite Estágio 3"
 when
-    $s : Sintomas(
-        sangramento == true,
-        dor == "leve" || dor == "moderada",
-        aumentoBolsa == true,
-        profundidadeBolsa >= 3 && profundidadeBolsa <= 4,
-        mobilidadeDental <= 1
-    )
+    $h : Hipotese(nome == "Doença Periodontal Estágio 3")
+    Evidencia(tipo == "dor", (valor == "moderada" || valor == "alta"), $fc : 0.9)
 then
-    double[] valores = new double[] {
-        $s.getFCSangramento(),
-        $s.getFCDor()
-    };
-    double fc = combinarFCs(valores);
-    insert(new Diagnostico("Gengivite", fc));
+    $h.atualizarFC($fc);
 end
 
-// Diagnóstico: Doença Periodontal Estágio 1
-rule "Doença Periodontal Estágio 1"
+rule "Sangramento indica Periodontite Estágio 3"
 when
-    $s : Sintomas(
-        profundidadeBolsa >= 4 && profundidadeBolsa <= 5,
-        mobilidadeDental <= 1
-    )
+    $h : Hipotese(nome == "Doença Periodontal Estágio 3")
+    Evidencia(tipo == "sangramento", valor == "true", $fc : 0.7)
 then
-    double[] valores = new double[] {
-        $s.getFCProfundidadeBolsa()
-    };
-    double fc = combinarFCs(valores);
-    insert(new Diagnostico("Doença Periodontal Estágio 1", fc));
+    $h.atualizarFC($fc);
 end
 
-// Diagnóstico: Doença Periodontal Estágio 2
-rule "Doença Periodontal Estágio 2"
-when
-    $s : Sintomas(
-        profundidadeBolsa >= 5 && profundidadeBolsa <= 6,
-        mobilidadeDental <= 2
-    )
-then
-    double[] valores = new double[] {
-        $s.getFCProfundidadeBolsa(),
-        $s.getFCMobilidadeDental()
-    };
-    double fc = combinarFCs(valores);
-    insert(new Diagnostico("Doença Periodontal Estágio 2", fc));
-end
+// Regras similares para profundidadeBolsa, mobilidade, aumentoBolsa, fístula...
 
-// Diagnóstico: Doença Periodontal Estágio 3
-rule "Doença Periodontal Estágio 3"
+rule "Gerar diagnóstico final para Periodontite Estágio 3"
 when
-    $s : Sintomas(
-        profundidadeBolsa >= 6 && profundidadeBolsa <= 7,
-        mobilidadeDental >= 2
-    )
+    $h : Hipotese(nome == "Doença Periodontal Estágio 3", $fc : fc)
+    eval($fc > 0.3)
 then
-    double[] valores = new double[] {
-        $s.getFCProfundidadeBolsa(),
-        $s.getFCMobilidadeDental()
-    };
-    double fc = combinarFCs(valores);
-    insert(new Diagnostico("Doença Periodontal Estágio 3", fc));
-end
-
-// Diagnóstico: Doença Periodontal Estágio 4
-rule "Doença Periodontal Estágio 4"
-when
-    $s : Sintomas(
-        profundidadeBolsa > 7,
-        mobilidadeDental == 3
-    )
-then
-    double[] valores = new double[] {
-        $s.getFCProfundidadeBolsa(),
-        $s.getFCMobilidadeDental()
-    };
-    double fc = combinarFCs(valores);
-    insert(new Diagnostico("Doença Periodontal Estágio 4", fc));
-end
-
-// Diagnóstico: Abscesso Pulpar
-rule "Abscesso Pulpar"
-when
-    $s : Sintomas(
-        dor == "extrema",
-        fistula == true
-    )
-then
-    double[] valores = new double[] {
-        $s.getFCDor(),
-        $s.getFCFistula()
-    };
-    double fc = combinarFCs(valores);
-    insert(new Diagnostico("Abscesso Pulpar", fc));
-end
-
-// Diagnóstico: Abscesso Periodontal
-rule "Abscesso Periodontal"
-when
-    $s : Sintomas(
-        dor == "alta" || dor == "extrema",
-        fistula == true,
-        aumentoBolsa == true,
-        profundidadeBolsa >= 5
-    )
-then
-    double[] valores = new double[] {
-        $s.getFCDor(),
-        $s.getFCFistula(),
-        $s.getFCAumentoBolsa(),
-        $s.getFCProfundidadeBolsa()
-    };
-    double fc = combinarFCs(valores);
-    insert(new Diagnostico("Abscesso Periodontal", fc));
+    insert(new Diagnostico("Doença Periodontal Estágio 3", $fc));
 end

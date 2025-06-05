@@ -17,11 +17,14 @@ public class Main {
             KieSession kSession = kc.newKieSession("ksession-rules");
 
             Sintomas sintomas = new Sintomas();
-            sintomas.setDor("leve");
-            sintomas.setAparenciaGengiva("lisa e brilahnte");
-            sintomas.setLesoes(true);
-            sintomas.setTartaro(true);
+            /*sintomas.setDor("leve");
+            sintomas.setAparenciaGengiva("lisa e brilhante");
+            sintomas.setLesoes(false);
+            sintomas.setTartaro(false);
             sintomas.setAbscesso(false);
+            sintomas.setMobilidadeDental(0);
+            sintomas.setAumentoBolsa(false);
+            sintomas.setProfundidadeBolsa(0);*/
 
             kSession.insert(sintomas);
             kSession.fireAllRules();

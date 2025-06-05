@@ -12,6 +12,8 @@ import java.util.stream.Collectors;
 
 import com.exemplo.estomatologia.model.Diagnostico;
 import com.exemplo.estomatologia.model.Sintomas;
+import com.exemplo.estomatologia.model.Evidencia;
+import com.exemplo.estomatologia.model.Hipotese;
 
 public class DiagnosticoUI extends JFrame {
 
@@ -41,15 +43,19 @@ public class DiagnosticoUI extends JFrame {
         fistulaField = new JCheckBox("Fístula?");
         sangramentoField = new JCheckBox("Sangramento?");
         aumentoBolsaField = new JCheckBox("Aumento da bolsa?");
-        profundidadeField = new JSpinner(new SpinnerNumberModel(1, 1, 10, 1));
+        profundidadeField = new JSpinner(new SpinnerNumberModel(0, 0, 10, 1));
         mobilidadeField = new JComboBox<>(new Integer[]{0, 1, 2, 3});
 
-        inputPanel.setLayout(new GridLayout(11, 2)); // ajuste
+        inputPanel.setLayout(new GridLayout(12, 2)); // ajuste
 
         inputPanel.add(new JLabel("Dor:"));
         inputPanel.add(dorField);
-        inputPanel.add(new JLabel("Vermelhidão:"));
+        inputPanel.add(new JLabel("Aparência Gengiva:"));
         inputPanel.add(aparenciaGengivaField);
+        inputPanel.add(new JLabel("Profundidade da bolsa (mm):"));
+        inputPanel.add(profundidadeField);
+        inputPanel.add(new JLabel("Mobilidade dental:"));
+        inputPanel.add(mobilidadeField);
         inputPanel.add(lesoesField);
         inputPanel.add(new JLabel());
         inputPanel.add(tartaroField);
@@ -61,10 +67,7 @@ public class DiagnosticoUI extends JFrame {
         inputPanel.add(sangramentoField);
         inputPanel.add(new JLabel());
         inputPanel.add(aumentoBolsaField);
-        inputPanel.add(new JLabel("Profundidade da bolsa (mm):"));
-        inputPanel.add(profundidadeField);
-        inputPanel.add(new JLabel("Mobilidade dental:"));
-        inputPanel.add(mobilidadeField);
+
 
         JButton diagnosticarButton = new JButton("Diagnosticar");
         diagnosticarButton.addActionListener(this::executarDiagnostico);
@@ -101,7 +104,16 @@ public class DiagnosticoUI extends JFrame {
             sintomas.setMobilidadeDental((Integer) mobilidadeField.getSelectedItem());
 
             // Inserir fatos e disparar regras
-            kSession.insert(sintomas);
+            //kSession.insert(sintomas);
+
+            if (sintomas.getDor() != null) {
+                double fc = sintomas.getDor().equals("alta") ? 0.9 : sintomas.getDor().equals("moderada") ? 0.7 : 0.3;
+                kSession.insert(new Evidencia("dor", sintomas.getDor(), fc));
+            }
+            if (sintomas.isSangramento()) {
+                kSession.insert(new Evidencia("sangramento", "true", 0.8));
+            }
+
             kSession.fireAllRules();
 
             // Capturar diagnósticos
@@ -111,7 +123,7 @@ public class DiagnosticoUI extends JFrame {
                     .collect(Collectors.toList());
 
             if (resultados.isEmpty()) {
-                resultadoArea.setText("Encaminhar paciente para especialista.");
+                resultadoArea.setText("Diagnóstico indefinido.");
             } else {
                 for (Object d : resultados) {
                     resultadoArea.append(d.toString() + "\n");
