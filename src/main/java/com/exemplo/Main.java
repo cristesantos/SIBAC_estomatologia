@@ -1,4 +1,4 @@
-package com.exemplo.estomatologia;
+package com.exemplo;
 
 import com.exemplo.estomatologia.model.Diagnostico;
 import com.exemplo.estomatologia.model.Sintomas;

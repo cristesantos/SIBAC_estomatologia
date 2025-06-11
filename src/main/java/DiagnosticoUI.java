@@ -35,7 +35,7 @@ public class DiagnosticoUI extends JFrame {
 
         // Painel de entrada
         JPanel inputPanel = new JPanel(new GridLayout(6, 2));
-        dorField = new JComboBox<>(new String[]{"leve", "média", "moderada", "alta", "extrema"});
+        dorField = new JComboBox<>(new String[]{"leve", "intensa"});
         aparenciaGengivaField = new JComboBox<>(new String[]{"lisa e brilhante", "edemaciada"});
         lesoesField = new JCheckBox("Lesões?");
         tartaroField = new JCheckBox("Tártaro?");

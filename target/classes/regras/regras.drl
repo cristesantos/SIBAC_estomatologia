@@ -71,6 +71,22 @@ then
     $h.atualizarFC(0.95);
 end
 
+rule "Abscesso Pulpar - dor leve"
+when
+    $h : Hipotese(nome == "Abscesso Pulpar")
+    Evidencia(tipo == "dor", valor == "leve")
+then
+    $h.atualizarFC(0.0);
+end
+
+rule "Abscesso Pulpar - aparência gengiva - lisa e brilhante"
+when
+    $h : Hipotese(nome == "Abscesso Pulpar")
+    Evidencia(tipo == "aparenciaGengiva", valor == "lisa e brilhante")
+then
+    $h.atualizarFC(0.0);
+end
+
 rule "Abscesso Pulpar - aparência gengiva - edemaciada"
 when
     $h : Hipotese(nome == "Abscesso Pulpar")
@@ -86,7 +102,7 @@ when
     $h : Hipotese(nome == "Abscesso Pulpar")
     Evidencia(tipo == "mobilidade", valor <= 1)
 then
-    $h.atualizarFC(0.3);
+    $h.atualizarFC(0.2);
 end
 
 rule "Abscesso Pulpar - mobilidade >1"
@@ -94,13 +110,21 @@ when
     $h : Hipotese(nome == "Abscesso Pulpar")
     Evidencia(tipo == "mobilidade", valor > 1)
 then
-    $h.atualizarFC(0.2);
+    $h.atualizarFC(0.3);
 end
 
 rule "Abscesso Pulpar - lesões"
 when
     $h : Hipotese(nome == "Abscesso Pulpar")
     Evidencia(tipo == "lesoes", valor == true)
+then
+    $h.atualizarFC(0.1);
+end
+
+rule "Abscesso Pulpar - tartaro"
+when
+    $h : Hipotese(nome == "Abscesso Pulpar")
+    Evidencia(tipo == "tartaro", valor == true)
 then
     $h.atualizarFC(0.1);
 end
@@ -128,7 +152,7 @@ when
     $h : Hipotese(nome == "Abscesso Periodontal")
     Evidencia(tipo == "dor", valor == "leve")
 then
-    $h.atualizarFC(0.5);
+    $h.atualizarFC(0.2);
 end
 
 rule "Abscesso Periodontal - aparência gengiva"
@@ -205,6 +229,14 @@ end
 
 // doença periodontal estágio 1
 
+rule "Doença Periodontal Estágio 1 - dor intensa"
+when
+    $h : Hipotese(nome == "Doença Periodontal Estágio 1")
+    Evidencia(tipo == "dor", valor == "intensa")
+then
+    $h.atualizarFC(0.0);
+end
+
 rule "Doença Periodontal Estágio 1 - dor leve"
 when
     $h : Hipotese(nome == "Doença Periodontal Estágio 1")
@@ -221,10 +253,10 @@ then
     $h.atualizarFC(0.6);
 end
 
-rule "Doença Periodontal Estágio 1 - profundidade < 4"
+rule "Doença Periodontal Estágio 1 - profundidade = 4"
 when
     $h : Hipotese(nome == "Doença Periodontal Estágio 1")
-    Evidencia(tipo == "profundidade_bolsa", valor < 4 )
+    Evidencia(tipo == "profundidade_bolsa", valor == 4 )
 then
     $h.atualizarFC(0.4);
 end
@@ -232,7 +264,7 @@ end
 rule "Doença Periodontal Estágio 1 - superior a 4"
 when
     $h : Hipotese(nome == "Doença Periodontal Estágio 1")
-    Evidencia(tipo == "profundidade_bolsa", valor >= 4 )
+    Evidencia(tipo == "profundidade_bolsa", valor > 4 )
 then
     $h.atualizarFC(0.6);
 end
@@ -374,20 +406,20 @@ then
     $h.atualizarFC(0.2);
 end
 
-rule "Doença Periodontal Estágio 3 - dor intensa"
-when
-    $h : Hipotese(nome == "Doença Periodontal Estágio 3")
-    Evidencia(tipo == "dor", valor == "intensa")
-then
-    $h.atualizarFC(0.1);
-end
-
 rule "Doença Periodontal Estágio 3 - aparência gengiva - edemaciada"
 when
     $h : Hipotese(nome == "Doença Periodontal Estágio 3")
     Evidencia(tipo == "aparenciaGengiva", valor == "edemaciada")
 then
     $h.atualizarFC(0.3);
+end
+
+rule "Doença Periodontal Estágio 3 - profundidade <4"
+when
+    $h : Hipotese(nome == "Doença Periodontal Estágio 3")
+    Evidencia(tipo == "profundidade_bolsa", valor < 4 )
+then
+    $h.atualizarFC(0.0);
 end
 
 rule "Doença Periodontal Estágio 3 - profundidade >=4"
@@ -397,6 +429,7 @@ when
 then
     $h.atualizarFC(0.8);
 end
+
 
 // A mobilidade vai aumentando à medida que o estagio da doença aumenta
 rule "Doença Periodontal Estágio 3 - mobilidade <=1"
@@ -414,6 +447,7 @@ when
 then
     $h.atualizarFC(0.7);
 end
+
 
 rule "Doença Periodontal Estágio 3 - tartaro"
 when
