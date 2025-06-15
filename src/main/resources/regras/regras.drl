@@ -72,14 +72,6 @@ then
     $h.atualizarFC(-0.5);
 end
 
-rule "Abscesso Pulpar - aparencia gengiva - casca de laranja"
-when
-    $h : Hipotese(nome == "Abscesso Pulpar")
-    Evidencia(tipo == "aparenciaGengiva", valorTexto == "casca de laranja")
-then
-    $h.atualizarFC(-0.5);
-end
-
 rule "Abscesso Pulpar - dor intensa"
 when
     $h : Hipotese(nome == "Abscesso Pulpar")
@@ -153,14 +145,6 @@ when
     Evidencia(tipo == "dor", valorTexto == "leve")
 then
     $h.atualizarFC(0.5);
-end
-
-rule "Abscesso Periodontal - aparência gengiva casca de laranja"
-when
-    $h : Hipotese(nome == "Abscesso Periodontal")
-    Evidencia(tipo == "aparenciaGengiva", valorTexto == "casca de laranja")
-then
-    $h.atualizarFC(-0.5);
 end
 
 rule "Abscesso Periodontal - aparência gengiva"
@@ -269,14 +253,6 @@ then
     $h.atualizarFC(0.6);
 end
 
-rule "Doença Periodontal Estágio 1 - aparência gengiva - casca de laranja"
-when
-    $h : Hipotese(nome == "Doença Periodontal Estágio 1")
-    Evidencia(tipo == "aparenciaGengiva", valorTexto == "casca de laranja")
-then
-    $h.atualizarFC(-0.5);
-end
-
 rule "Doença Periodontal Estágio 1 - profundidade < 4"
 when
     $h : Hipotese(nome == "Doença Periodontal Estágio 1")
@@ -358,14 +334,6 @@ when
     Evidencia(tipo == "aparenciaGengiva", valorTexto == "edemaciada")
 then
     $h.atualizarFC(0.4);
-end
-
-rule "Doença Periodontal Estágio 2 - aparência gengiva - casca de laranja"
-when
-    $h : Hipotese(nome == "Doença Periodontal Estágio 2")
-    Evidencia(tipo == "aparenciaGengiva", valorTexto == "casca de laranja")
-then
-    $h.atualizarFC(-0.5);
 end
 
 rule "Doença Periodontal Estágio 2 - profundidade <4"
@@ -462,14 +430,6 @@ then
     $h.atualizarFC(0.3);
 end
 
-rule "Doença Periodontal Estágio 3 - aparência gengiva - casca de laranja"
-when
-    $h : Hipotese(nome == "Doença Periodontal Estágio 3")
-    Evidencia(tipo == "aparenciaGengiva", valorTexto == "casca de laranja")
-then
-    $h.atualizarFC(-0.5);
-end
-
 rule "Doença Periodontal Estágio 3 - profundidade < 4"
 when
     $h : Hipotese(nome == "Doença Periodontal Estágio 3")
@@ -561,14 +521,6 @@ then
     $h.atualizarFC(0.2);
 end
 
-rule "Doença Periodontal Estágio 4 - aparência gengiva - casca de laranja"
-when
-    $h : Hipotese(nome == "Doença Periodontal Estágio 4")
-    Evidencia(tipo == "aparenciaGengiva", valorTexto == "casca de laranja")
-then
-    $h.atualizarFC(-0.5);
-end
-
 rule "Doença Periodontal Estágio 4 - profundidade < 4"
 when
     $h : Hipotese(nome == "Doença Periodontal Estágio 4")
@@ -651,14 +603,6 @@ when
     Evidencia(tipo == "dor", valorTexto == "intensa")
 then
     $h.atualizarFC(-0.3);
-end
-
-rule "Gengivite - aparência gengiva - casca de laranja"
-when
-    $h : Hipotese(nome == "Gengivite")
-    Evidencia(tipo == "aparenciaGengiva", valorTexto == "casca de laranja")
-then
-    $h.atualizarFC(-0.1);
 end
 
 rule "Gengivite - aparência gengiva - lisa e brilhante"
