@@ -7,6 +7,7 @@ import org.kie.api.runtime.KieSession;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,7 +36,7 @@ public class DiagnosticoUI extends JFrame {
 
         // Painel de entrada
         JPanel inputPanel = new JPanel(new GridLayout(6, 2));
-        dorField = new JComboBox<>(new String[]{"leve", "intensa"});
+        dorField = new JComboBox<>(new String[]{"sem dor","leve", "intensa"});
         aparenciaGengivaField = new JComboBox<>(new String[]{"lisa e brilhante", "edemaciada"});
         lesoesField = new JCheckBox("Lesões?");
         tartaroField = new JCheckBox("Tártaro?");
@@ -143,10 +144,19 @@ public class DiagnosticoUI extends JFrame {
             kSession.fireAllRules();
 
             // Capturar diagnósticos
+            /*List<Object> resultados = kSession.getObjects()
+                    .stream()
+                    .filter(o -> o instanceof Diagnostico)
+                    .sorted(Comparator.comparingDouble(Diagnostico::getFc))
+                    .collect(Collectors.toList());*/
+
             List<Object> resultados = kSession.getObjects()
                     .stream()
                     .filter(o -> o instanceof Diagnostico)
+                    .map(o -> (Diagnostico) o)
+                    .sorted(Comparator.comparingDouble(Diagnostico::getFc).reversed())
                     .collect(Collectors.toList());
+
 
             if (resultados.isEmpty()) {
                 resultadoArea.setText("Diagnóstico indefinido.");
