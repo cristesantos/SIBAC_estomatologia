@@ -9,8 +9,8 @@ public class Sintomas {
     private boolean fistula;
     private boolean sangramento;
     private boolean aumentoBolsa;
-    private int profundidadeBolsa;
-    private int mobilidadeDental;
+    private double profundidadeBolsa;
+    private double mobilidadeDental;
 
     // Apenas getters e setters — nada de lógica de fator de certeza aqui
     public String getDor() { return dor; }
@@ -37,9 +37,9 @@ public class Sintomas {
     public boolean isAumentoBolsa() { return aumentoBolsa; }
     public void setAumentoBolsa(boolean aumentoBolsa) { this.aumentoBolsa = aumentoBolsa; }
 
-    public int getProfundidadeBolsa() { return profundidadeBolsa; }
-    public void setProfundidadeBolsa(int profundidadeBolsa) { this.profundidadeBolsa = profundidadeBolsa; }
+    public double getProfundidadeBolsa() { return profundidadeBolsa; }
+    public void setProfundidadeBolsa(double profundidadeBolsa) { this.profundidadeBolsa = profundidadeBolsa; }
 
-    public int getMobilidadeDental() { return mobilidadeDental; }
-    public void setMobilidadeDental(int mobilidadeDental) { this.mobilidadeDental = mobilidadeDental; }
+    public double getMobilidadeDental() { return mobilidadeDental; }
+    public void setMobilidadeDental(double mobilidadeDental) { this.mobilidadeDental = mobilidadeDental; }
 }

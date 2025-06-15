@@ -25,7 +25,7 @@ public class DiagnosticoUI extends JFrame {
     private JCheckBox abscessoField;
     private JTextArea resultadoArea;
     private JCheckBox fistulaField, sangramentoField, aumentoBolsaField;
-    private JSpinner profundidadeField;
+    private JComboBox<Integer> profundidadeField;
     private JComboBox<Integer> mobilidadeField;
 
     public DiagnosticoUI() {
@@ -37,14 +37,14 @@ public class DiagnosticoUI extends JFrame {
         // Painel de entrada
         JPanel inputPanel = new JPanel(new GridLayout(6, 2));
         dorField = new JComboBox<>(new String[]{"sem dor","leve", "intensa"});
-        aparenciaGengivaField = new JComboBox<>(new String[]{"lisa e brilhante", "edemaciada"});
+        aparenciaGengivaField = new JComboBox<>(new String[]{"casca de laranja", "lisa e brilhante", "edemaciada"});
         lesoesField = new JCheckBox("Lesões?");
         tartaroField = new JCheckBox("Tártaro?");
         abscessoField = new JCheckBox("Abscesso?");
         fistulaField = new JCheckBox("Fístula?");
         sangramentoField = new JCheckBox("Sangramento?");
         aumentoBolsaField = new JCheckBox("Aumento da bolsa?");
-        profundidadeField = new JSpinner(new SpinnerNumberModel(0, 0, 10, 1));
+        profundidadeField = new JComboBox<>(new Integer[]{0, 1, 2, 3, 4, 5, 6, 7});
         mobilidadeField = new JComboBox<>(new Integer[]{0, 1, 2, 3});
 
         inputPanel.setLayout(new GridLayout(12, 2)); // ajuste
@@ -101,7 +101,7 @@ public class DiagnosticoUI extends JFrame {
             sintomas.setFistula(fistulaField.isSelected());
             sintomas.setSangramento(sangramentoField.isSelected());
             sintomas.setAumentoBolsa(aumentoBolsaField.isSelected());
-            sintomas.setProfundidadeBolsa((Integer) profundidadeField.getValue());
+            sintomas.setProfundidadeBolsa((Integer) profundidadeField.getSelectedItem());
             sintomas.setMobilidadeDental((Integer) mobilidadeField.getSelectedItem());
 
             // Inserir fatos e disparar regras
@@ -120,10 +120,10 @@ public class DiagnosticoUI extends JFrame {
             kSession.insert(new Evidencia("dor", sintomas.getDor(), 0.0));
             if (sintomas.isSangramento())
                 kSession.insert(new Evidencia("sangramento", true, 0.0));
-            if (sintomas.getProfundidadeBolsa() > 5)
-                kSession.insert(new Evidencia("profundidadeBolsa", "alta", 0.0));
-            if (sintomas.getMobilidadeDental() > 1)
-                kSession.insert(new Evidencia("mobilidadeDental", "alta", 0.0));
+            if (sintomas.getProfundidadeBolsa() >= 0)
+                kSession.insert(new Evidencia("profundidade_bolsa", sintomas.getProfundidadeBolsa(), 0.0));
+            if (sintomas.getMobilidadeDental() >= 0)
+                kSession.insert(new Evidencia("mobilidade", sintomas.getMobilidadeDental(), 0.0));
             if (sintomas.isFistula()) {
                 kSession.insert(new Evidencia("fistula", true, 0.0));
             }
